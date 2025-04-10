@@ -1,0 +1,86 @@
+{
+    "name": "sabservis/dto_builder",
+    "description": "PHP DTO builder",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "dto",
+        "php"
+    ],
+    "config": {
+        "platform": {
+            "php": "8.1"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "laminas/laminas-component-installer": false
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.1",
+
+        "psr/container": "^1.1",
+        "symfony/expression-language": "^6.4",
+        "symfony/validator": "^6.4",
+
+        "ext-curl": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-soap": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SabServis\\DTOBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SabServis\\DTOBuilder\\Tests\\": "tests/"
+        }
+    },
+    "extra": [],
+    "scripts": {
+        "phpunit": "phpunit --colors=always tests/",
+        "tests": "@phpunit",
+        "phpstan:prepare": [
+            "composer install --quiet --no-progress --no-suggest --prefer-dist"
+        ],
+        "composerjson:check": [
+            "composer validate --no-check-publish --no-scripts --no-plugins --no-interaction"
+        ],
+        "meta:generate": [
+            "php .phpstorm.meta.php/generate_meta.php"
+        ],
+        "stan": "@phpstan",
+        "phpcs": "phpcs -p --standard=./phpcs.xml ./src/",
+        "phpcbf": "phpcbf -p --standard=./phpcs.xml ./src/",
+        "phpmd": "phpmd src text phpmd.xml",
+        "phpstan": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon -vv",
+        "phpstan-analyze": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon.dist -vvv --no-progress",
+        "all-checks": [
+            "composer validate",
+            "@phpcs",
+            "@phpstan",
+            "@phpmd"
+        ]
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.6",
+        "phpmd/phpmd": "^2.11",
+        "phpunit/phpunit": "^9.0",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpstan/phpstan": "^1.11",
+        "php-parallel-lint/php-console-highlighter": "^1.0",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpstan/phpstan-beberlei-assert": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.6",
+        "slevomat/coding-standard": "^8.12"
+    }
+}
