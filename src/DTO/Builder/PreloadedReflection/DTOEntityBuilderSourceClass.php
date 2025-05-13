@@ -7,6 +7,7 @@ namespace SabServis\DTOBuilder\DTO\Builder\PreloadedReflection;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
+use SabServis\DTOBuilder\Helper\DIResolver;
 
 /**
  * @template T of object
@@ -22,7 +23,7 @@ class DTOEntityBuilderSourceClass
     /** @var array<DTOEntityBuilderSourceProperty> */
     private array $properties = [];
 
-    /** @var array<?ReflectionMethod> */
+    /** @var array<array{ReflectionMethod|null, array<object>|null}> */
     private array $getGetterCache = [];
 
     public function __construct(
@@ -47,9 +48,13 @@ class DTOEntityBuilderSourceClass
         return $this->reflectionClass;
     }
 
+    /**
+     * @return array{ReflectionMethod|null, array<object>|null}
+     */
     public function getGetter(
         string $paramName,
-    ): ?ReflectionMethod {
+        DIResolver $diResolver,
+    ): array {
         $getterName = strtolower($this->paramNameToGetterName($paramName));
 
         if (array_key_exists($getterName, $this->getGetterCache)) {
@@ -57,27 +62,30 @@ class DTOEntityBuilderSourceClass
         }
 
         if (isset($this->methods[$getterName])) {
+            $args = [];
             $method = $this->methods[$getterName];
-            $hasRequiredParameter = false;
 
             foreach ($method->getParameters() as $parameter) {
                 if ($parameter->isOptional() || $parameter->isDefaultValueAvailable()) {
                     continue;
                 }
 
-                $hasRequiredParameter = true;
+                $di = $diResolver->resolveParameterCallback($this->className);
+                $reflectionParameters = $method->getParameters();
+
+                foreach ($reflectionParameters as $parameterDi) {
+                    $args[] = $di($parameterDi);
+                }
             }
 
-            if (!$hasRequiredParameter) {
-                $this->getGetterCache[$getterName] = $method;
+            $this->getGetterCache[$getterName] = [$method, $args];
 
-                return $method;
-            }
+            return [$method, $args];
         }
 
-        $this->getGetterCache[$getterName] = null;
+        $this->getGetterCache[$getterName] = [null, null];
 
-        return null;
+        return [null, null];
     }
 
     public function getProperty(string $paramName): ?DTOEntityBuilderSourceProperty
