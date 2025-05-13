@@ -66,35 +66,36 @@ class DTOEntityBuilder extends DTOBuilder
         string $paramName,
         mixed $entity,
     ): array {
-        $getter = $sourceClass->getGetter($paramName);
+        if (str_contains($paramName, '.')) {
+            $innerObject = $this->getInnerEntity($sourceClass, $paramName, $entity);
+
+            if ($innerObject && is_object($innerObject)) {
+                $innerEntityReflection = new DTOEntityBuilderSourceClass($innerObject::class);
+                $delimiterPosition = (int)strpos($paramName, '.');
+
+                return $this->getValue($innerEntityReflection, substr($paramName, $delimiterPosition + 1), $innerObject);
+            }
+
+            if (is_array($innerObject)) {
+                $delimiterPosition = (int)strpos($paramName, '.');
+
+                return $this->serviceLocator->get(DTOArrayBuilder::class)->getValue(
+                    substr($paramName, $delimiterPosition + 1),
+                    $innerObject,
+                );
+            }
+        }
+
+        [$getter, $args] = $sourceClass->getGetter($paramName, $this->DIResolver);
 
         if ($getter) {
-            return [$getter->invoke($entity), true];
+            return [$getter->invoke($entity, ...$args ?: []), true];
         }
 
         $property = $sourceClass->getProperty($paramName);
 
         if ($property) {
             return [$property->getValue($entity), true];
-        }
-
-        $innerObject = $this->getInnerEntity($sourceClass, $paramName, $entity);
-
-        if ($innerObject && is_object($innerObject)) {
-            $innerEntityReflection = new DTOEntityBuilderSourceClass($innerObject::class);
-            $delimiterPosition = (int)strpos($paramName, '.');
-
-            return $this->getValue($innerEntityReflection, substr($paramName, $delimiterPosition + 1), $innerObject);
-        }
-
-        if (is_array($innerObject)) {
-            //je to entita?
-            $delimiterPosition = (int)strpos($paramName, '.');
-
-            return $this->serviceLocator->get(DTOArrayBuilder::class)->getValue(
-                substr($paramName, $delimiterPosition + 1),
-                $innerObject,
-            );
         }
 
         // Zde můžete zpracovat případ, kdy entita nemá požadovaný atribut
