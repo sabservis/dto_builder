@@ -136,6 +136,12 @@ class AbstractDTO implements \JsonSerializable
                 continue;
             }
 
+            if ($subitem instanceof \UnitEnum) {
+                $arr[$subKey] = $subitem->name;
+
+                continue;
+            }
+
             $arr[$subKey] = $subitem instanceof self ? $subitem->toArray() : $subitem;
         }
 
