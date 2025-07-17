@@ -29,6 +29,11 @@ class AbstractDTO implements \JsonSerializable
         return $this;
     }
 
+    public function getAbstractDtoInputData(): mixed
+    {
+        return $this->abstractDtoInputData;
+    }
+
     public function existInInputData(string $name): bool
     {
         if (is_array($this->abstractDtoInputData) === false) {
