@@ -14,6 +14,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
 class DTOBuilderConstructorParameter
 {
     private string $name;
+    private string $constructorParameterName;
     private ?DTOBuilderConstructorParameterType $type;
     private ?DTOBuilderConstructorMethod $fromFunctionHydrator;
 
@@ -35,6 +36,7 @@ class DTOBuilderConstructorParameter
         }
 
         $this->name = $this->getParameterName($reflectionParameter);
+        $this->constructorParameterName = $reflectionParameter->getName();
         $this->type = $this->reflectionParameter->getType() ? new DTOBuilderConstructorParameterType($this->reflectionParameter->getType()) : null;
         $this->hasType = $this->reflectionParameter->hasType();
         $this->isOptional = $this->reflectionParameter->isOptional();
@@ -47,6 +49,10 @@ class DTOBuilderConstructorParameter
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getConstructorParameterName(): string {
+        return $this->constructorParameterName;
     }
 
     public function isOptional(): bool

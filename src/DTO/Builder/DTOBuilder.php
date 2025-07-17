@@ -12,6 +12,7 @@ use SabServis\DTOBuilder\DTO\Builder\Filter\DTODefaultValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTODtoValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTOEnumArrayValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTONumberValueFilter;
+use SabServis\DTOBuilder\DTO\Builder\Filter\DTOStringValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\PreloadedReflection\DTOBuilderConstructorMethod;
 use SabServis\DTOBuilder\DTO\Builder\PreloadedReflection\DTOBuilderConstructorParameter;
 use SabServis\DTOBuilder\Exception\DTOCreationException;
@@ -31,6 +32,7 @@ class DTOBuilder
         DTOArrayValueFilter::class,
         DTOEnumArrayValueFilter::class,
         DTOBooleanValueFilter::class,
+        DTOStringValueFilter::class,
         DTODatetimeValueFilter::class,
         DTONumberValueFilter::class,
         DTODtoValueFilter::class,

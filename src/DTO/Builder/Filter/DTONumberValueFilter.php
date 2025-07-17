@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace SabServis\DTOBuilder\DTO\Builder\Filter;
 
+use SabServis\DTOBuilder\Attribute\HydrateFloat;
 use SabServis\DTOBuilder\DTO\Builder\PreloadedReflection\DTOBuilderConstructorParameter;
 use SabServis\DTOBuilder\Exception\DTOCreationException;
+use SabServis\DTOBuilder\Helper\FloatHelper;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
@@ -21,6 +23,10 @@ class DTONumberValueFilter implements DTOValueFilterInterface
         }
 
         $parameterType = $parameter->getType()?->getName();
+
+        if ($parameter->getAttribute(HydrateFloat::class)) {
+            return FloatHelper::getFloatOrNull($value);
+        }
 
         if ($parameterType === 'int' || $parameterType === 'float') {
             if (!is_numeric($value)) {

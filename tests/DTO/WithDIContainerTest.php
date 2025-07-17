@@ -13,6 +13,7 @@ use SabServis\DTOBuilder\DTO\Builder\Filter\DTODefaultValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTODtoValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTOEnumArrayValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTONumberValueFilter;
+use SabServis\DTOBuilder\DTO\Builder\Filter\DTOStringValueFilter;
 use SabServis\DTOBuilder\Helper\DIResolver;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
@@ -27,6 +28,7 @@ class WithDIContainerTest extends TestCase
         $container->set(DTODefaultValueFilter::class, new DTODefaultValueFilter());
         $container->set(DTOEnumArrayValueFilter::class, new DTOEnumArrayValueFilter());
         $container->set(DTOBooleanValueFilter::class, new DTOBooleanValueFilter());
+        $container->set(DTOStringValueFilter::class, new DTOStringValueFilter());
         $container->set(DTODatetimeValueFilter::class, new DTODatetimeValueFilter());
         $container->set(DTONumberValueFilter::class, new DTONumberValueFilter());
         $container->set(\DateTime::class, new \DateTime());

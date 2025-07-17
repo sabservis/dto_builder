@@ -7,10 +7,6 @@ namespace SabServis\DTOBuilder\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class HydrateString
+class HydrateFloat
 {
-    public function __construct(
-        public bool $emptyToNull = false,
-    ) {
-    }
 }

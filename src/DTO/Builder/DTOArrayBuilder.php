@@ -34,11 +34,19 @@ class DTOArrayBuilder extends DTOBuilder
 
         // Příprava argumentů pro konstruktor na základě požadovaných parametrů
         $args = [];
+        $dtoInputData = [];
 
         foreach ($constructorClass->getParameters() as $parameter) {
             [$value, $valueProvided] = $this->getValue($parameter->getName(), $data);
 
-            $args[] = $this->hydrateValue($value, $parameter, $data, $valueProvided);
+            $value = $this->hydrateValue($value, $parameter, $data, $valueProvided);
+            $args[] = $value;
+
+            if (!$valueProvided) {
+                continue;
+            }
+
+            $dtoInputData[$parameter->getConstructorParameterName()] = $value;
         }
 
         if (!$args) {
@@ -52,7 +60,7 @@ class DTOArrayBuilder extends DTOBuilder
         // Vytvoření nové instance DTO s dynamicky naplněnými parametry
         return (new $className(...$args))
             ->setValidator($this->validator)
-            ->setAbstractDtoInputData($data);
+            ->setAbstractDtoInputData($dtoInputData);
     }
 
     /**
@@ -71,6 +79,11 @@ class DTOArrayBuilder extends DTOBuilder
         if (str_contains($paramName, '.')) {
             $delimiterPosition = (int)strpos($paramName, '.');
             $firstLevelPropertyName = substr($paramName, 0, $delimiterPosition);
+
+            if (!isset($data[$firstLevelPropertyName])) {
+                return [null, false];
+            }
+
             $innerArray = $data[$firstLevelPropertyName];
 
             if (is_array($innerArray)) {
