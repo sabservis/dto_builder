@@ -15,6 +15,7 @@ class HydrateFromFunction
     public function __construct(
         public array $functionName,
         public bool $callOnlyWithPayload = false,
+        public bool $allowValueFilters = false,
     ) {
     }
 }

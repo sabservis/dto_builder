@@ -100,7 +100,9 @@ class DTOBuilder
         try {
             if ($fromFunctionHydrator) {
                 $value = $this->hydrateFromFunction($value, $fromFunctionHydrator, $parameter, $payload);
-            } else {
+            }
+
+            if ($parameter->isAllowValueFilters()) {
                 foreach ($this->valueFilters as $valueFilter) {
                     $filter = $this->serviceLocator->get($valueFilter);
                     $value = $filter->filter($value, $parameter, $valueProvided);
