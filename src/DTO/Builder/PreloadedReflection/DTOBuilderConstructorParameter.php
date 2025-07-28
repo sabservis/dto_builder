@@ -24,6 +24,7 @@ class DTOBuilderConstructorParameter
     private bool $allowsNull;
     private bool $isDefaultValueAvailable;
     private bool $fromFunctionHydratorOnlyWithPayload = false;
+    private bool $allowValueFilters = true;
     private bool $hasType;
     private bool $isOptional;
 
@@ -80,6 +81,10 @@ class DTOBuilderConstructorParameter
     public function isFromFunctionHydratorOnlyWithPayload(): bool
     {
         return $this->fromFunctionHydratorOnlyWithPayload;
+    }
+
+    public function isAllowValueFilters(): bool {
+        return $this->allowValueFilters;
     }
 
     public function getReflectionParameter(): ReflectionParameter
@@ -159,5 +164,6 @@ class DTOBuilderConstructorParameter
         $this->fromFunctionHydrator = $reflMethod;
 
         $this->fromFunctionHydratorOnlyWithPayload = $hydrator->getArgument('callOnlyWithPayload') ?: false;
+        $this->allowValueFilters = $hydrator->getArgument('allowValueFilters') ?: false;
     }
 }

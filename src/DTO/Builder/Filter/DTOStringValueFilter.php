@@ -51,7 +51,6 @@ class DTOStringValueFilter implements DTOValueFilterInterface
         throw new DTOCreationException($list);
     }
 
-
     /**
      * @throws DTOCreationException
      */
