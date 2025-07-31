@@ -60,6 +60,7 @@ class DTOEntityBuilder extends DTOBuilder
      * @param DTOEntityBuilderSourceClass<T> $sourceClass
      *
      * @return array{0: ?mixed, 1: bool} $value,$valueProvided pair
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getValue(
         DTOEntityBuilderSourceClass $sourceClass,
@@ -96,6 +97,10 @@ class DTOEntityBuilder extends DTOBuilder
 
         if ($property) {
             return [$property->getValue($entity), true];
+        }
+
+        if ($entity instanceof \stdClass && property_exists($entity, $paramName)) {
+            return [$entity->{$paramName}, true];
         }
 
         // Zde můžete zpracovat případ, kdy entita nemá požadovaný atribut

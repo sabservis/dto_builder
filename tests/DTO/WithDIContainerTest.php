@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use SabServis\DTOBuilder\DTO\Builder\DTOArrayBuilder;
 use SabServis\DTOBuilder\DTO\Builder\DTOEntityBuilder;
 use SabServis\DTOBuilder\DTO\Builder\DTOMultiArrayBuilder;
+use SabServis\DTOBuilder\DTO\Builder\DTOMultiEntityBuilder;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTOArrayValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTOBooleanValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTODatetimeValueFilter;
@@ -56,6 +57,16 @@ class WithDIContainerTest extends TestCase
             new DIResolver($container),
         );
         $container->set(DTOEntityBuilder::class, $entityBuilder);
+
+
+        $multiEntityBuilder = new DTOMultiEntityBuilder(
+            $entityBuilder,
+            Validation::createValidatorBuilder()
+                ->getValidator(),
+            $container,
+            new DIResolver($container),
+        );
+        $container->set(DTOMultiEntityBuilder::class, $multiEntityBuilder);
 
         $container->set(DTODtoValueFilter::class, new DTODtoValueFilter($arrayBuilder, $entityBuilder));
         $container->set(DTOArrayValueFilter::class, new DTOArrayValueFilter($multiArrayBuilder));
