@@ -3,6 +3,7 @@
 namespace SabServis\DTOBuilder\Tests\DTO;
 
 use SabServis\DTOBuilder\Attribute\HydrateDateTime;
+use SabServis\DTOBuilder\Attribute\HydrateToDateTime;
 use SabServis\DTOBuilder\DTO\Builder\Filter\DTODatetimeValueFilter;
 use SabServis\DTOBuilder\DTO\Builder\PreloadedReflection\DTOBuilderConstructorMethod;
 use SabServis\DTOBuilder\DTO\Builder\PreloadedReflection\DTOBuilderConstructorParameter;
@@ -48,7 +49,7 @@ class DTODatetimeFilterTest extends TestCase
         $this->assertEquals('NotUpdated', $result);
     }
 
-    public function testFormats()
+    public function testFromDateTime()
     {
         $dateTime = new \DateTime('2023-01-01 12:00:00');
 
@@ -63,6 +64,21 @@ class DTODatetimeFilterTest extends TestCase
         $parameterTime = $this->getParameter('time');
         $result = $this->filter->filter($dateTime, $parameterTime, true);
         $this->assertEquals($dateTime->format(DateTimeFormatEnum::Time->value), $result);
+    }
+
+    public function testToDatetime()
+    {
+        $dateTimeString = '2023-01-01T12:00:00';
+
+        $parameterDateTime = $this->getParameter('stringDate');
+        $result = $this->filter->filter($dateTimeString, $parameterDateTime, true);
+        $this->assertEquals($dateTimeString, $result->format(DateTimeFormatEnum::DateTime->value));
+        $this->assertInstanceOf(\DateTime::class, $result);
+
+        $parameterDateTime = $this->getParameter('stringDateTime');
+        $result = $this->filter->filter($dateTimeString, $parameterDateTime, true);
+        $this->assertEquals($dateTimeString, $result->format(DateTimeFormatEnum::DateTime->value));
+        $this->assertInstanceOf(\DateTimeImmutable::class, $result);
     }
 
 
@@ -85,6 +101,12 @@ class TestClass2
 
         #[HydrateDateTime(format: DateTimeFormatEnum::Time)]
         public \DateTime $time,
+
+        #[HydrateToDateTime()]
+        public string $stringDate,
+
+        #[HydrateToDateTime(dateTimeClass: \DateTimeImmutable::class)]
+        public string $stringDateTime,
 
         public \DateTime $ignore,
 
