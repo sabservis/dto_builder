@@ -116,6 +116,10 @@ class DTODatetimeValueFilter implements DTOValueFilterInterface
         $format = $dateTimeHydrator->getArgument('format') ?? DateTimeFormatEnum::DateTime;
         assert($format instanceof DateTimeFormatEnum);
 
+        if ($format === DateTimeFormatEnum::DateTime) {
+            $value = $value->setTimezone(new \DateTimeZone('UTC'));
+        }
+
         return $value->format($format->value);
     }
 }

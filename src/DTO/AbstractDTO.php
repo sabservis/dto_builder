@@ -61,7 +61,19 @@ class AbstractDTO implements \JsonSerializable
         $errors = $this->_validator->validate($this, null, $validationGroups);
 
         if ($errors->count() > 0) {
-            throw new DTOValidationException($errors);
+            $message = '';
+
+            for ($i = 0; $i < $errors->count(); $i++) {
+                $message .= (string)$errors[$i]?->getMessage();
+
+                if ($i >= count($errors) - 1) {
+                    continue;
+                }
+
+                $message .= '\n';
+            }
+
+            throw new DTOValidationException($errors, $message);
         }
     }
 
@@ -166,6 +178,10 @@ class AbstractDTO implements \JsonSerializable
 
         // Procházení pole a aplikace hodnot, pokud jsou dostupné
         foreach ($item as $key => $value) {
+            if ($value instanceof self) {
+                $value = $value->toArray();
+            }
+
             if (is_array($value)) {
                 // Rekurzivní zpracování pro zanořená pole
                 $result[$key] = $this->patchArray($value, $values);
