@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SabServis\DTOBuilder\Helper;
 
-final class FloatHelper
+final class IntegerHelper
 {
-    public static function getFloatOrNull(mixed $value): ?float
+    public static function getIntegerOrNull(mixed $value): ?int
     {
         if (is_string($value)) {
             $value = trim($value);
@@ -17,6 +17,6 @@ final class FloatHelper
             return null;
         }
 
-        return (float) $value;
+        return (int) $value;
     }
 }

@@ -29,7 +29,7 @@ class DTODatetimeFilterTest extends TestCase
         $dateTime = new \DateTime('2023-01-01 12:00:00');
 
         $result = $this->filter->filter($dateTime, $parameter, true);
-        $this->assertEquals('2023-01-01T12:00:00', $result);
+        $this->assertEquals('2023-01-01T12:00:00+00:00', $result);
     }
 
     public function testFilterWithInvalidType()
@@ -68,7 +68,7 @@ class DTODatetimeFilterTest extends TestCase
 
     public function testToDatetime()
     {
-        $dateTimeString = '2023-01-01T12:00:00';
+        $dateTimeString = '2023-01-01T12:00:00+00:00';
 
         $parameterDateTime = $this->getParameter('stringDate');
         $result = $this->filter->filter($dateTimeString, $parameterDateTime, true);
