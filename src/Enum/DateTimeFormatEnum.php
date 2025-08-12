@@ -6,7 +6,7 @@ namespace SabServis\DTOBuilder\Enum;
 
 enum DateTimeFormatEnum: string
 {
-    case DateTime = 'Y-m-d\TH:i:s';
+    case DateTime = 'c';
     case Date = 'Y-m-d';
     case Time = 'H:i:s';
 
